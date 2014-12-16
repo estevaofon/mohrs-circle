@@ -73,7 +73,7 @@ class Gui:
         about_menu.add_command(label="About the app", command=self.new_window)
         menu_bar.add_cascade(label="About", menu=about_menu)
         app.config(menu=menu_bar)
-
+        # left canvas
         self.canvas = Tkinter.Canvas(top_draw_frame, width=200,
                                      height=400, bg='white')
         self.canvas.pack(expand=Tkinter.YES, fill=Tkinter.BOTH)
