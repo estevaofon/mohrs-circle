@@ -42,13 +42,22 @@ class Calculations:
         self.tetas = ((math.degrees(math.atan(-(self.sx-self.sy) /
                                               (2.*self.txy))))/2.)
 
+    def conversion(self, radius):
+        self.save_plot = (self.save*radius)/self.r
+        self.sx_plot = (self.sx*radius)/self.r
+        self.sy_plot = (self.sy*radius)/self.r
+        self.txy_plot = (self.txy*radius)/self.r
+        self.nsx_plot = (self.nsx*radius)/self.r
+        self.nsy_plot = (self.nsy*radius)/self.r
+        self.ntxy_plot = (self.ntxy*radius)/self.r
+
 
 class Gui:
     def __init__(self, app):
-        self.radius = 0
+        self.r_plot = 0
         app.title("Mohr Circle")
         app.geometry('1100x500')
-        calc = Calculations()
+        self.calc = Calculations()
 
         self.frame = Tkinter.Frame(app)
         self.frame.pack(side='right', pady=10)
@@ -74,6 +83,7 @@ class Gui:
         self.entry1 = Tkinter.Entry(self.frame1,
                                     textvariable=cust_name, width=15)
         self.entry1.pack(side='left')
+        self.entry1.focus_force()
 
         label_text2 = Tkinter.StringVar()
         label_text2.set(u"\u03C3y")
@@ -123,15 +133,14 @@ class Gui:
         w = self.canvas.winfo_reqwidth()
         print w, h
         self.canvas.create_oval(60, 60, 400, 400, width=2,
-                                fill='blue', tag='circle')
-        radius = (400 - 60)/2
-        self.canvas.create_line(60+radius, 60+radius,
-                                400, 100, width=3, fill='red')
+                                fill='#d2d2ff', tag='circle')
+        self.r_plot = (400 - 60)/2
+        print 'r_plot ='+str(self.r_plot)
 
         self.canvas2 = Tkinter.Canvas(top_draw_frame, width=450,
                                       height=500, bg='white')
         self.canvas2.create_oval(60, 60, 400, 400, width=2,
-                                 fill='blue', tag='circle')
+                                 fill='#d2d2ff', tag='circle')
         self.canvas2.pack(side='left')
         # self.canvas3.pack(side='left', expand=Tkinter.YES, fill=Tkinter.BOTH)
 
@@ -141,23 +150,46 @@ class Gui:
         self.canvas1.create_rectangle(60, 100, 140, 180,
                                       fill='#b4b4ff', width=1)
         self.canvas1.pack(expand=Tkinter.YES, fill='both')
-        calc.run(100., 60., -48., 30.)
-        print 'tetap = '+str(calc.tetap)
-        print 'tetas = '+str(calc.tetas)
-        print 'smax = '+str(calc.smax)
-        print 'smin = '+str(calc.smin)
-        print 'tmax = '+str(calc.tmax)
-        print 'smed = '+str(calc.save)
-        print 'r = '+str(calc.r)
-        print 'nsx = '+str(calc.nsx)
-        print 'nsy = '+str(calc.nsy)
-        print 'ntxy = '+str(calc.ntxy)
+        self.calc.run(100., 60., -48., 30.)
+        self.calc.conversion(self.r_plot)
+        rx = 60 + self.r_plot
+        ry = 60 + self.r_plot
+        yo = ry
+        xo = rx - self.calc.save_plot
+        sx = xo + self.calc.sx_plot
+        sy = xo + self.calc.sy_plot
+        txy = yo + self.calc.txy_plot
+        txym = yo - self.calc.txy_plot
+        print xo
+        self.canvas.create_line(int(rx), int(ry), int(sx),
+                                int(txy), width=3, fill='blue', tag='line1')
+        print txy
+        print 'txy para plotar'+str(int(-txy))
+        self.canvas.create_line(int(rx), int(ry), int(sy),
+                                int(txym), width=3, fill='blue', tag='line1')
+        print 'tetap = '+str(self.calc.tetap)
+        print 'tetas = '+str(self.calc.tetas)
+        print 'smax = '+str(self.calc.smax)
+        print 'smin = '+str(self.calc.smin)
+        print 'tmax = '+str(self.calc.tmax)
+        print 'smed = '+str(self.calc.save)
+        print 'r = '+str(self.calc.r)
+        print 'nsx = '+str(self.calc.nsx)
+        print 'nsy = '+str(self.calc.nsy)
+        print 'ntxy = '+str(self.calc.ntxy)
 
     def execute(self):
         try:
-            string_input = self.entry1.get()
-            self.radius = int(string_input)
-            self.build_canvas(self.radius)
+            string_input1 = self.entry1.get()
+            string_input2 = self.entry2.get()
+            string_input3 = self.entry3.get()
+            string_input4 = self.entry4.get()
+            sx = float(string_input1)
+            sy = float(string_input2)
+            txy = float(string_input3)
+            teta = float(string_input4)
+            self.calc.run(sx, sy, txy, teta)
+            self.build_canvas()
         except ValueError:
             self.wrong_value()
 
@@ -175,11 +207,25 @@ class Gui:
         label1.pack(side='top', padx=10, pady=15)
         top.mainloop()
 
-    def build_canvas(self, radius):
-        self.canvas.delete('circle')
-        self.canvas.create_oval(10, 10, radius, radius, width=2,
-                                fill='blue', tag='circle')
-        self.canvas.create_line(100, 100, 200, 300, width=3, fill='red')
+    def build_canvas(self):
+        self.canvas.delete('line1')
+        self.calc.conversion(self.r_plot)
+        rx = 60 + self.r_plot
+        ry = 60 + self.r_plot
+        yo = ry
+        xo = rx - self.calc.save_plot
+        sx = xo + self.calc.sx_plot
+        sy = xo + self.calc.sy_plot
+        txy = yo + self.calc.txy_plot
+        txym = yo - self.calc.txy_plot
+        self.canvas.create_line(int(rx), int(ry), int(sx),
+                                int(txy), width=3, fill='blue', tag='line1')
+        self.canvas.create_line(int(rx), int(ry), int(sy),
+                                int(txym), width=3, fill='blue', tag='line1')
+        self.canvas.create_line(0, int(yo), 500, int(yo),
+                                width=1, fill='black', tag='origin_line')
+        self.canvas.create_line(xo, 0, xo,
+                                500, width=1, fill='black', tag='origin_line')
 
 app = Tkinter.Tk()
 Gui(app)
