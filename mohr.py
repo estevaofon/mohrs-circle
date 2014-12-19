@@ -1,6 +1,46 @@
 #!/usr/bin/python
 import Tkinter
 import tkMessageBox
+import math
+
+
+class Calculations:
+    def __init__(self):
+        self.sx = 0
+        self.sy = 0
+        self.txy = 0
+        self.r = 0
+        self.save = 0
+        self.smax = 0
+        self.smin = 0
+        self.tmax = 0
+        self.tetap = 0
+        self.tetas = 0
+
+    def run(self, sx, sy, txy, teta=0):
+        sin = math.sin
+        cos = math.cos
+        rad = math.radians
+        self.sx = sx
+        self.sy = sy
+        self.txy = txy
+        self.teta = teta
+        self.r = 0
+        self.save = (self.sx + self.sy)/2.
+        self.savem = (self.sx - self.sy)/2.
+        self.r = ((((self.sx - self.sy)/2.)**2)+self.txy**2)**0.5
+        self.nsx = (self.save + self.savem*cos(rad(2.*teta)) +
+                    self.txy*sin(rad(2*teta)))
+        self.nsy = (self.save - self.savem*cos(2.*rad(teta)) -
+                    self.txy*sin(2.*rad(teta)))
+        self.ntxy = -self.savem*sin(2.*rad(teta))+self.txy*cos(2.*rad(teta))
+        self.smax = self.save + (((self.savem)**2) + self.txy**2)**0.5
+        self.smin = self.save - (((self.savem)**2) + self.txy**2)**0.5
+        self.tmax = ((self.savem**2) + self.txy**2)**0.5
+        self.tetap = ((math.degrees(math.atan((2.*self.txy) /
+                                              (self.sx-self.sy))))/2.)
+        self.tetas = ((math.degrees(math.atan(-(self.sx-self.sy) /
+                                              (2.*self.txy))))/2.)
 
 
 class Gui:
@@ -8,6 +48,7 @@ class Gui:
         self.radius = 0
         app.title("Mohr Circle")
         app.geometry('1100x500')
+        calc = Calculations()
 
         self.frame = Tkinter.Frame(app)
         self.frame.pack(side='right', pady=10)
@@ -74,20 +115,25 @@ class Gui:
         menu_bar.add_cascade(label="About", menu=about_menu)
         app.config(menu=menu_bar)
         # left canvas
-        self.canvas = Tkinter.Canvas(top_draw_frame, width=200,
-                                     height=400, bg='white')
-        self.canvas.pack(expand=Tkinter.YES, fill=Tkinter.BOTH)
+        self.canvas = Tkinter.Canvas(top_draw_frame, width=450,
+                                     height=500, bg='white')
+        self.canvas.pack(side='left')
+        # self.canvas.pack(side='left', expand=Tkinter.YES, fill=Tkinter.BOTH)
+        h = self.canvas.winfo_reqheight()
+        w = self.canvas.winfo_reqwidth()
+        print w, h
         self.canvas.create_oval(60, 60, 400, 400, width=2,
                                 fill='blue', tag='circle')
-        self.canvas.create_line(60, 60, 400, 400, width=3, fill='red')
-        self.canvas.pack(side='left', expand=Tkinter.YES, fill=Tkinter.BOTH)
+        radius = (400 - 60)/2
+        self.canvas.create_line(60+radius, 60+radius,
+                                400, 100, width=3, fill='red')
 
-        self.canvas2 = Tkinter.Canvas(top_draw_frame, width=200,
-                                      height=400, bg='white')
-        self.canvas2.pack(expand=Tkinter.YES, fill=Tkinter.BOTH)
+        self.canvas2 = Tkinter.Canvas(top_draw_frame, width=450,
+                                      height=500, bg='white')
         self.canvas2.create_oval(60, 60, 400, 400, width=2,
                                  fill='blue', tag='circle')
-        self.canvas2.pack(side='left', expand=Tkinter.YES, fill=Tkinter.BOTH)
+        self.canvas2.pack(side='left')
+        # self.canvas3.pack(side='left', expand=Tkinter.YES, fill=Tkinter.BOTH)
 
         self.canvas1 = Tkinter.Canvas(self.frame, width=200,
                                       height=400, bg='#f0f0f0')
@@ -95,6 +141,17 @@ class Gui:
         self.canvas1.create_rectangle(60, 100, 140, 180,
                                       fill='#b4b4ff', width=1)
         self.canvas1.pack(expand=Tkinter.YES, fill='both')
+        calc.run(100., 60., -48., 30.)
+        print 'tetap = '+str(calc.tetap)
+        print 'tetas = '+str(calc.tetas)
+        print 'smax = '+str(calc.smax)
+        print 'smin = '+str(calc.smin)
+        print 'tmax = '+str(calc.tmax)
+        print 'smed = '+str(calc.save)
+        print 'r = '+str(calc.r)
+        print 'nsx = '+str(calc.nsx)
+        print 'nsy = '+str(calc.nsy)
+        print 'ntxy = '+str(calc.ntxy)
 
     def execute(self):
         try:
