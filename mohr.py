@@ -56,8 +56,13 @@ class Gui:
     def __init__(self, app):
         self.r_plot = 0
         app.title("Mohr Circle")
-        app.geometry('1100x500')
+        app.geometry('850x500')
         self.calc = Calculations()
+        self.circle_diameter = 400
+        self.xo_circle = 120
+        self.yo_circle = 50
+        self.x1_circle = self.xo_circle + self.circle_diameter
+        self.y1_circle = self.yo_circle + self.circle_diameter
 
         self.frame = Tkinter.Frame(app)
         self.frame.pack(side='right', pady=10)
@@ -123,38 +128,26 @@ class Gui:
         menu_bar.add_cascade(label="About", menu=about_menu)
         app.config(menu=menu_bar)
 
-        self.r_plot = (400 - 60)/2
-        rx = 60 + self.r_plot
-        ry = 60 + self.r_plot
+        self.r_plot = self.circle_diameter/2
+        rx = self.xo_circle + self.r_plot
+        ry = self.yo_circle + self.r_plot
         # left mohr circle
-        self.canvas0 = Tkinter.Canvas(top_draw_frame, width=450,
+        self.canvas0 = Tkinter.Canvas(top_draw_frame, width=1000,
                                       height=500, bg='white')
         self.canvas0.pack(side='left')
-        self.canvas0.create_oval(60, 60, 400, 400, width=2,
+        self.canvas0.create_oval(self.xo_circle, self.yo_circle, self.x1_circle,
+                                 self.y1_circle, width=2,
                                  fill='#d2d2ff', tag='circle')
 
-        self.canvas0.create_line(0, int(ry), 505, int(ry),
+        self.canvas0.create_line(0, int(ry), 1000, int(ry),
                                  width=1, fill='black', tag='origin_line')
         self.canvas0.create_line(int(rx), 0, int(rx),
-                                 505, width=1, fill='black', tag='origin_line')
-        self.canvas0.create_oval(rx-2, ry-2, 232, 232, width=2,
+                                 1000, width=1, fill='black', tag='origin_line')
+        diameter = 3
+        self.rx2 = rx + diameter
+        self.ry2 = ry + diameter
+        self.canvas0.create_oval(rx-2, ry-2, self.rx2, self.ry2, width=2,
                                  fill='black', tag='center-dot')
-        # right mohr circle
-        self.canvas1 = Tkinter.Canvas(top_draw_frame, width=450,
-                                      height=500, bg='white')
-        self.canvas1.pack(side='left')
-        self.canvas1.create_oval(60, 60, 400, 400, width=2,
-                                 fill='#d2d2ff', tag='circle')
-        self.canvas1.create_oval(rx-2, ry-2, 232, 232, width=2,
-                                 fill='black', tag='circle')
-        self.canvas1.create_line(0, int(ry), 505, int(ry),
-                                 width=1, fill='black', tag='origin_line')
-        self.canvas1.create_line(int(rx), 0, int(rx),
-                                 505, width=1, fill='black', tag='origin_line')
-        self.canvas1 = Tkinter.Canvas(self.frame, width=200,
-                                      height=400, bg='#f0f0f0')
-        self.canvas1.create_rectangle(60, 100, 140, 180,
-                                      fill='#b4b4ff', width=1)
         # convension canvas
         self.canvas2 = Tkinter.Canvas(self.frame, width=200,
                                       height=400, bg='#f0f0f0')
@@ -197,8 +190,8 @@ class Gui:
         self.canvas0.delete('origin_line')
         self.canvas0.delete('center-dot')
         self.calc.conversion(self.r_plot)
-        rx = 60 + self.r_plot
-        ry = 60 + self.r_plot
+        rx = self.xo_circle + self.r_plot
+        ry = self.yo_circle + self.r_plot
         yo = ry
         xo = rx - self.calc.save_plot
         sx = xo + self.calc.sx_plot
@@ -206,22 +199,22 @@ class Gui:
         nsx = xo + self.calc.nsx_plot
         nsy = xo + self.calc.nsy_plot
         txy = yo + self.calc.txy_plot
+        txym = yo - self.calc.txy_plot
         ntxy = yo + self.calc.ntxy_plot
         ntxym = yo - self.calc.ntxy_plot
-        txym = yo - self.calc.txy_plot
-        self.canvas0.create_line(int(rx), int(ry), int(sx),
-                                 int(txy), width=3, fill='blue', tag='line1')
-        self.canvas0.create_line(int(rx), int(ry), int(sy),
-                                 int(txym), width=3, fill='blue', tag='line1')
         self.canvas0.create_line(int(rx), int(ry), int(nsx),
                                  int(ntxy), width=3, fill='red', tag='line2')
         self.canvas0.create_line(int(rx), int(ry), int(nsy),
                                  int(ntxym), width=3, fill='red', tag='line2')
-        self.canvas0.create_line(0, int(yo), 500, int(yo),
+        self.canvas0.create_line(int(rx), int(ry), int(sx),
+                                 int(txy), width=3, fill='blue', tag='line1')
+        self.canvas0.create_line(int(rx), int(ry), int(sy),
+                                 int(txym), width=3, fill='blue', tag='line1')
+        self.canvas0.create_line(0, int(yo), 1000, int(yo),
                                  width=1, fill='black', tag='origin_line')
         self.canvas0.create_line(xo, 0, xo,
-                                 500, width=1, fill='black', tag='origin_line')
-        self.canvas0.create_oval(rx-2, ry-2, 232, 232, width=2,
+                                 1000, width=1, fill='black', tag='origin_line')
+        self.canvas0.create_oval(rx-2, ry-2, self.rx2, self.ry2, width=2,
                                  fill='black', tag='center-dot')
         print 'tetap = '+str(self.calc.tetap)
         print 'tetas = '+str(self.calc.tetas)
