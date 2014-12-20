@@ -2,6 +2,9 @@
 import Tkinter
 import tkMessageBox
 import math
+import sys
+import os
+import subprocess
 
 
 class Calculations:
@@ -74,6 +77,8 @@ class Gui:
         self.frame3.pack()
         self.frame4 = Tkinter.Frame(self.frame)
         self.frame4.pack()
+        self.frame5 = Tkinter.Frame(self.frame)
+        self.frame5.pack()
 
         top_draw_frame = Tkinter.Frame(app)
         top_draw_frame.pack(expand=Tkinter.YES, fill=Tkinter.BOTH, side='left')
@@ -114,9 +119,22 @@ class Gui:
         self.entry4 = Tkinter.Entry(self.frame4,
                                     textvariable=cust_name4, width=15)
         self.entry4.pack(side='left')
+        self.var = Tkinter.IntVar()
+        R1 = Tkinter.Radiobutton(self.frame5, text="counterclockwise",
+                                 variable=self.var, value=1)
+        R1.pack(anchor='w')
+        R2 = Tkinter.Radiobutton(self.frame5, text="clockwise",
+                                 variable=self.var, value=2)
+        R2.pack(anchor='w')
+        R1.select()
+
         button1 = Tkinter.Button(self.frame, text="OK", width=10,
                                  command=self.execute)
         button1.pack(padx=10, pady=10)
+
+        button2 = Tkinter.Button(self.frame, text="Log results", width=10,
+                                 command=self.show_log)
+        button2.pack(padx=10)
 
         menu_bar = Tkinter.Menu(app)
         file_menu = Tkinter.Menu(menu_bar, tearoff=0)
@@ -149,11 +167,42 @@ class Gui:
         self.canvas0.create_oval(rx-2, ry-2, self.rx2, self.ry2, width=2,
                                  fill='black', tag='center-dot')
         # convension canvas
-        self.canvas2 = Tkinter.Canvas(self.frame, width=200,
+        self.canvas1 = Tkinter.Canvas(self.frame, width=200,
                                       height=400, bg='#f0f0f0')
-        self.canvas2.pack(expand=Tkinter.YES, fill='both')
-        self.canvas2.create_rectangle(60, 100, 140, 180,
+        self.canvas1.pack(expand=Tkinter.YES, fill='both')
+        self.canvas1.create_rectangle(60, 100, 140, 180,
                                       fill='#b4b4ff', width=1)
+        # sy arrow
+        self.canvas1.create_line(100, 60, 100,
+                                 100, width=1, fill='black', tag='origin_line')
+        self.canvas1.create_line(100, 60, 95,
+                                 70, width=1, fill='black', tag='origin_line')
+        self.canvas1.create_line(100, 60, 105,
+                                 70, width=1, fill='black', tag='origin_line')
+        self.canvas1.create_text(100, 50, text=u"\u03C3y")
+        # sx arrow
+        self.canvas1.create_line(60, 140, 20,
+                                 140, width=1, fill='black', tag='origin_line')
+        self.canvas1.create_line(20, 140, 30,
+                                 145, width=1, fill='black', tag='origin_line')
+        self.canvas1.create_line(20, 140, 30,
+                                 135, width=1, fill='black', tag='origin_line')
+        self.canvas1.create_text(30, 125, text=u"\u03C3x")
+        # txy up
+        self.canvas1.create_line(150, 100, 150,
+                                 140, width=1, fill='black', tag='origin_line')
+        self.canvas1.create_line(150, 100, 155,
+                                 110, width=1, fill='black', tag='origin_line')
+        self.canvas1.create_line(150, 100, 145,
+                                 110, width=1, fill='black', tag='origin_line')
+        self.canvas1.create_text(150, 80, text=u"\u03C4xy")
+        # txy right
+        self.canvas1.create_line(100, 90, 140,
+                                 90, width=1, fill='black', tag='origin_line')
+        self.canvas1.create_line(140, 90, 130,
+                                 95, width=1, fill='black', tag='origin_line')
+        self.canvas1.create_line(140, 90, 130,
+                                 85, width=1, fill='black', tag='origin_line')
 
     def execute(self):
         try:
@@ -165,6 +214,8 @@ class Gui:
             sy = float(string_input2)
             txy = float(string_input3)
             teta = float(string_input4)
+            if self.var.get() == 2:
+                teta = -teta
             self.calc.run(sx, sy, txy, teta)
             self.build_canvas()
         except ValueError:
@@ -180,6 +231,16 @@ class Gui:
         top.geometry('380x80')
         label_text = Tkinter.StringVar()
         label_text.set("App developed by Estevao Fonseca")
+        label1 = Tkinter.Label(top, textvariable=label_text, height=2)
+        label1.pack(side='top', padx=10, pady=15)
+        top.mainloop()
+
+    def file_not_created(self):
+        top = Tkinter.Toplevel()
+        top.title("Info")
+        top.geometry('380x100')
+        label_text = Tkinter.StringVar()
+        label_text.set("There is no log yet")
         label1 = Tkinter.Label(top, textvariable=label_text, height=2)
         label1.pack(side='top', padx=10, pady=15)
         top.mainloop()
@@ -216,17 +277,30 @@ class Gui:
                                  1000, width=1, fill='black', tag='origin_line')
         self.canvas0.create_oval(rx-2, ry-2, self.rx2, self.ry2, width=2,
                                  fill='black', tag='center-dot')
-        print 'tetap = '+str(self.calc.tetap)
-        print 'tetas = '+str(self.calc.tetas)
-        print 'smax = '+str(self.calc.smax)
-        print 'smin = '+str(self.calc.smin)
-        print 'tmax = '+str(self.calc.tmax)
-        print 'smed = '+str(self.calc.save)
-        print 'r = '+str(self.calc.r)
-        print 'nsx = '+str(self.calc.nsx)
-        print 'nsy = '+str(self.calc.nsy)
-        print 'ntxy = '+str(self.calc.ntxy)
-        print '----------------------------------------'
+        try:
+            with open("log.txt", 'w') as data:
+                text = []
+                text.append('tetap = '+str(self.calc.tetap)+'\n')
+                text.append('tetas = '+str(self.calc.tetas)+'\n')
+                text.append('smax = '+str(self.calc.smax)+'\n')
+                text.append('smin = '+str(self.calc.smin)+'\n')
+                text.append('tmax = '+str(self.calc.tmax)+'\n')
+                text.append('smed = '+str(self.calc.save)+'\n')
+                text.append('r = '+str(self.calc.r)+'\n')
+                text.append('nsx = '+str(self.calc.nsx)+'\n')
+                text.append('nsy = '+str(self.calc.nsy)+'\n')
+                text.append('ntxy = '+str(self.calc.ntxy)+'\n')
+                data.writelines(text)
+                data.close()
+        except:
+            print "File erro"
+            raise
+
+    def show_log(self):
+        if sys.platform == 'linux2':
+            subprocess.call(["xdg-open", "log.txt"])
+        else:
+            os.startfile("log.txt")
 
 app = Tkinter.Tk()
 Gui(app)
