@@ -1,6 +1,6 @@
 #!/usr/bin/python
-import Tkinter
-import tkMessageBox
+import tkinter
+import tkinter.messagebox
 import math
 import sys
 import os
@@ -67,81 +67,81 @@ class Gui:
         self.x1_circle = self.xo_circle + self.circle_diameter
         self.y1_circle = self.yo_circle + self.circle_diameter
 
-        self.frame = Tkinter.Frame(app)
+        self.frame = tkinter.Frame(app)
         self.frame.pack(side='right', pady=10)
-        self.frame1 = Tkinter.Frame(self.frame)
+        self.frame1 = tkinter.Frame(self.frame)
         self.frame1.pack()
-        self.frame2 = Tkinter.Frame(self.frame)
+        self.frame2 = tkinter.Frame(self.frame)
         self.frame2.pack()
-        self.frame3 = Tkinter.Frame(self.frame)
+        self.frame3 = tkinter.Frame(self.frame)
         self.frame3.pack()
-        self.frame4 = Tkinter.Frame(self.frame)
+        self.frame4 = tkinter.Frame(self.frame)
         self.frame4.pack()
-        self.frame5 = Tkinter.Frame(self.frame)
+        self.frame5 = tkinter.Frame(self.frame)
         self.frame5.pack()
 
-        top_draw_frame = Tkinter.Frame(app)
-        top_draw_frame.pack(expand=Tkinter.YES, fill=Tkinter.BOTH, side='left')
+        top_draw_frame = tkinter.Frame(app)
+        top_draw_frame.pack(expand=tkinter.YES, fill=tkinter.BOTH, side='left')
 
-        label_text = Tkinter.StringVar()
+        label_text = tkinter.StringVar()
         label_text.set(u"\u03C3x")
-        label1 = Tkinter.Label(self.frame1, textvariable=label_text, height=2)
+        label1 = tkinter.Label(self.frame1, textvariable=label_text, height=2)
         label1.pack(side='left', padx=7)
-        cust_name = Tkinter.StringVar(None)
-        self.entry1 = Tkinter.Entry(self.frame1,
+        cust_name = tkinter.StringVar(None)
+        self.entry1 = tkinter.Entry(self.frame1,
                                     textvariable=cust_name, width=15)
         self.entry1.pack(side='left')
         self.entry1.focus_force()
 
-        label_text2 = Tkinter.StringVar()
+        label_text2 = tkinter.StringVar()
         label_text2.set(u"\u03C3y")
-        label2 = Tkinter.Label(self.frame2, textvariable=label_text2, height=2)
+        label2 = tkinter.Label(self.frame2, textvariable=label_text2, height=2)
         label2.pack(side='left', padx=7)
-        cust_name2 = Tkinter.StringVar(None)
-        self.entry2 = Tkinter.Entry(self.frame2,
+        cust_name2 = tkinter.StringVar(None)
+        self.entry2 = tkinter.Entry(self.frame2,
                                     textvariable=cust_name2, width=15)
         self.entry2.pack(side='left')
 
-        label_text3 = Tkinter.StringVar()
+        label_text3 = tkinter.StringVar()
         label_text3.set(u"\u03C4xy")
-        label3 = Tkinter.Label(self.frame3, textvariable=label_text3, height=2)
+        label3 = tkinter.Label(self.frame3, textvariable=label_text3, height=2)
         label3.pack(side='left', padx=5)
-        cust_name3 = Tkinter.StringVar(None)
-        self.entry3 = Tkinter.Entry(self.frame3,
+        cust_name3 = tkinter.StringVar(None)
+        self.entry3 = tkinter.Entry(self.frame3,
                                     textvariable=cust_name3, width=15)
         self.entry3.pack(side='left')
 
-        label_text4 = Tkinter.StringVar()
+        label_text4 = tkinter.StringVar()
         label_text4.set(u"\u03B8")
-        label4 = Tkinter.Label(self.frame4, textvariable=label_text4, height=2)
+        label4 = tkinter.Label(self.frame4, textvariable=label_text4, height=2)
         label4.pack(side='left', padx=12)
-        cust_name4 = Tkinter.StringVar(None)
-        self.entry4 = Tkinter.Entry(self.frame4,
+        cust_name4 = tkinter.StringVar(None)
+        self.entry4 = tkinter.Entry(self.frame4,
                                     textvariable=cust_name4, width=15)
         self.entry4.pack(side='left')
-        self.var = Tkinter.IntVar()
-        R1 = Tkinter.Radiobutton(self.frame5, text="counterclockwise",
+        self.var = tkinter.IntVar()
+        R1 = tkinter.Radiobutton(self.frame5, text="counterclockwise",
                                  variable=self.var, value=1)
         R1.pack(anchor='w')
-        R2 = Tkinter.Radiobutton(self.frame5, text="clockwise",
+        R2 = tkinter.Radiobutton(self.frame5, text="clockwise",
                                  variable=self.var, value=2)
         R2.pack(anchor='w')
         R1.select()
 
-        button1 = Tkinter.Button(self.frame, text="OK", width=10,
+        button1 = tkinter.Button(self.frame, text="OK", width=10,
                                  command=self.execute)
         button1.pack(padx=10, pady=10)
 
-        button2 = Tkinter.Button(self.frame, text="Log results", width=10,
+        button2 = tkinter.Button(self.frame, text="Log results", width=10,
                                  command=self.show_log)
         button2.pack(padx=10)
 
-        menu_bar = Tkinter.Menu(app)
-        file_menu = Tkinter.Menu(menu_bar, tearoff=0)
+        menu_bar = tkinter.Menu(app)
+        file_menu = tkinter.Menu(menu_bar, tearoff=0)
         file_menu.add_separator()
         file_menu.add_command(label="Exit", command=app.quit)
         menu_bar.add_cascade(label="File", menu=file_menu)
-        about_menu = Tkinter.Menu(menu_bar, tearoff=0)
+        about_menu = tkinter.Menu(menu_bar, tearoff=0)
         about_menu.add_command(label="About the app", command=self.new_window)
         menu_bar.add_cascade(label="About", menu=about_menu)
         app.config(menu=menu_bar)
@@ -150,7 +150,7 @@ class Gui:
         rx = self.xo_circle + self.r_plot
         ry = self.yo_circle + self.r_plot
         # left mohr circle
-        self.canvas0 = Tkinter.Canvas(top_draw_frame, width=1000,
+        self.canvas0 = tkinter.Canvas(top_draw_frame, width=1000,
                                       height=500, bg='white')
         self.canvas0.pack(side='left')
         self.canvas0.create_oval(self.xo_circle, self.yo_circle, self.x1_circle,
@@ -167,9 +167,9 @@ class Gui:
         self.canvas0.create_oval(rx-2, ry-2, self.rx2, self.ry2, width=2,
                                  fill='black', tag='center-dot')
         # convension canvas
-        self.canvas1 = Tkinter.Canvas(self.frame, width=200,
+        self.canvas1 = tkinter.Canvas(self.frame, width=200,
                                       height=400, bg='#f0f0f0')
-        self.canvas1.pack(expand=Tkinter.YES, fill='both')
+        self.canvas1.pack(expand=tkinter.YES, fill='both')
         self.canvas1.create_rectangle(60, 100, 140, 180,
                                       fill='#b4b4ff', width=1)
         # sy arrow
@@ -222,26 +222,26 @@ class Gui:
             self.wrong_value()
 
     def wrong_value(self):
-        tkMessageBox.showinfo("Status",
+        tkinter.messagebox.showinfo("Status",
                               "Please insert only numbers!")
 
     def new_window(self):
-        top = Tkinter.Toplevel()
+        top = tkinter.Toplevel()
         top.title("About the app")
         top.geometry('380x80')
-        label_text = Tkinter.StringVar()
+        label_text = tkinter.StringVar()
         label_text.set("App developed by Estevao Fonseca")
-        label1 = Tkinter.Label(top, textvariable=label_text, height=2)
+        label1 = tkinter.Label(top, textvariable=label_text, height=2)
         label1.pack(side='top', padx=10, pady=15)
         top.mainloop()
 
     def file_not_created(self):
-        top = Tkinter.Toplevel()
+        top = tkinter.Toplevel()
         top.title("Info")
         top.geometry('380x100')
-        label_text = Tkinter.StringVar()
+        label_text = tkinter.StringVar()
         label_text.set("There is no log yet")
-        label1 = Tkinter.Label(top, textvariable=label_text, height=2)
+        label1 = tkinter.Label(top, textvariable=label_text, height=2)
         label1.pack(side='top', padx=10, pady=15)
         top.mainloop()
 
@@ -293,7 +293,7 @@ class Gui:
                 data.writelines(text)
                 data.close()
         except:
-            print "File erro"
+            print("File erro")
             raise
 
     def show_log(self):
@@ -302,6 +302,6 @@ class Gui:
         else:
             os.startfile("log.txt")
 
-app = Tkinter.Tk()
+app = tkinter.Tk()
 Gui(app)
 app.mainloop()
